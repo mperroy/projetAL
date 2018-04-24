@@ -1,6 +1,8 @@
-package src;
+package shapes;
 
 import java.util.ArrayList;
+
+import observer.ObserverShape;
 
 public abstract class ShapeSimple implements Shape {
 	private double rotation;

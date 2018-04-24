@@ -1,4 +1,4 @@
-package src;
+package shapes;
 
 public class RegularPolygon extends ShapeSimple{
 	private double edgeLength;
@@ -16,5 +16,8 @@ public class RegularPolygon extends ShapeSimple{
 		this.edgeNumber = edgeNumber;
 		
 		// Vertices position ?
+		
+		// Default constructor at 5 vertices
+		// Position set, only modification in function (properties edition)
 	}
 }

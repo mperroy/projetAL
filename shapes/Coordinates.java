@@ -1,4 +1,4 @@
-package src;
+package shapes;
 
 public class Coordinates {
 	private int x;

@@ -1,4 +1,6 @@
-package src;
+package shapes;
+
+import observer.ObserverShape;
 
 public interface Shape {
 	public void scale(int reductionRate);

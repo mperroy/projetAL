@@ -1,4 +1,4 @@
-package src;
+package shapes;
 
 public class Rectangle extends ShapeSimple {
 	private int width;
