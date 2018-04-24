@@ -1,5 +1,5 @@
 package gui;
 
-public class AWTView extends View {
+public class AWTView implements View {
 
 }
