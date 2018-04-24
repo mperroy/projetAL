@@ -6,7 +6,7 @@ import observer.ObserverShape;
 
 public abstract class ShapeSimple implements Shape {
 	private double rotation;
-	private Color color;
+	private ColorSimple color;
 	private Coordinates position; // position of point in top left corner
 	private ArrayList<Coordinates> vertices;
 	private Coordinates translation;
@@ -16,7 +16,7 @@ public abstract class ShapeSimple implements Shape {
 	
 	public ShapeSimple() {
 		this.rotation = 0;
-		this.color = new Color();
+		this.color = new ColorSimple();
 		this.position = new Coordinates();
 		this.vertices = new ArrayList<Coordinates>();
 		this.translation = new Coordinates();
@@ -25,7 +25,7 @@ public abstract class ShapeSimple implements Shape {
 	
 	public ShapeSimple(Coordinates position) {
 		this.rotation = 0;
-		this.color = new Color();
+		this.color = new ColorSimple();
 		this.position = position;
 		this.vertices = new ArrayList<Coordinates>();
 		this.translation = new Coordinates();
@@ -78,4 +78,47 @@ public abstract class ShapeSimple implements Shape {
 
 	}
 
+	public double getRotation() {
+		return rotation;
+	}
+
+	public void setRotation(double rotation) {
+		this.rotation = rotation;
+	}
+
+	public ColorSimple getColor() {
+		return color;
+	}
+
+	public void setColor(ColorSimple color) {
+		this.color = color;
+	}
+
+	public ArrayList<Coordinates> getVertices() {
+		return vertices;
+	}
+
+	public void setVertices(ArrayList<Coordinates> vertices) {
+		this.vertices = vertices;
+	}
+
+	public Coordinates getTranslation() {
+		return translation;
+	}
+
+	public void setTranslation(Coordinates translation) {
+		this.translation = translation;
+	}
+
+	public Coordinates getRotationCenter() {
+		return rotationCenter;
+	}
+
+	public void setRotationCenter(Coordinates rotationCenter) {
+		this.rotationCenter = rotationCenter;
+	}
+
+	public void setPosition(Coordinates position) {
+		this.position = position;
+	}
 }

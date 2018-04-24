@@ -1,18 +1,18 @@
 package shapes;
 
-public class Rectangle extends ShapeSimple {
-	private int width;
-	private int height;
+public class RectangleSimple extends ShapeSimple {
+	private double width;
+	private double height;
 	private double borderCurve;
 	
-	public Rectangle() {
+	public RectangleSimple() {
 		super();
 		this.width = 6;
 		this.height = 5;
 		this.borderCurve = 0;
 	}
 	
-	public Rectangle(Coordinates position, int width, int height) {
+	public RectangleSimple(Coordinates position, int width, int height) {
 		super(position);
 		this.width = width;
 		this.height = height;
@@ -22,6 +22,26 @@ public class Rectangle extends ShapeSimple {
 		addVertix(new Coordinates(getPosition().getX()+width, getPosition().getY()));
 		addVertix(new Coordinates(getPosition().getX()+width, getPosition().getY()+height));
 		addVertix(new Coordinates(getPosition().getX(), getPosition().getY()+height));
+	}
+	
+	public double getWidth() {
+		return width;
+	}
+
+	public void setWidth(double width) {
+		this.width = width;
+	}
+
+	public double getHeight() {
+		return height;
+	}
+
+	public void setHeight(double height) {
+		this.height = height;
+	}
+
+	public double getBorderCurve() {
+		return borderCurve;
 	}
 	
 	public void setBorderCurve(double borderCurve) {
