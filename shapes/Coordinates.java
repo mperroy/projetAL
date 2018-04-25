@@ -1,32 +1,32 @@
 package shapes;
 
 public class Coordinates {
-	private int x;
-	private int y;
+	private double x;
+	private double y;
 	
 	public Coordinates() {
 		this.x = 0;
 		this.y = 0;
 	}
 	
-	public Coordinates(int x, int y) {
+	public Coordinates(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
-	public void setX(int x) {
-		this.x = x;
+	public void setX(double d) {
+		this.x = d;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 	

@@ -36,6 +36,4 @@ public class RegularPolygonSimple extends ShapeSimple{
 	public void setEdgeNumber(int edgeNumber) {
 		this.edgeNumber = edgeNumber;
 	}
-	
-	
 }

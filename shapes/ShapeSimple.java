@@ -1,6 +1,7 @@
 package shapes;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import observer.ObserverShape;
 
@@ -8,13 +9,13 @@ public abstract class ShapeSimple implements Shape {
 	private double rotation;
 	private ColorSimple color;
 	private Coordinates position; // position of point in top left corner
-	private ArrayList<Coordinates> vertices;
-	private Coordinates translation;
+	private ArrayList<Coordinates> vertices; //always position first in ?
+	private Coordinates translation; // à enlever si pas utile
 	private Coordinates rotationCenter;
-	
+
 	// Constructor ? Called in the abstract factory ?
-	
-	public ShapeSimple() {
+
+	public ShapeSimple() { //initialisation to null
 		this.rotation = 0;
 		this.color = new ColorSimple();
 		this.position = new Coordinates();
@@ -22,16 +23,16 @@ public abstract class ShapeSimple implements Shape {
 		this.translation = new Coordinates();
 		this.rotationCenter = new Coordinates();
 	}
-	
-	public ShapeSimple(Coordinates position) {
+
+	public ShapeSimple(Coordinates position) { 
 		this.rotation = 0;
 		this.color = new ColorSimple();
 		this.position = position;
-		this.vertices = new ArrayList<Coordinates>();
+		this.vertices = new ArrayList<Coordinates>(); //add other vertices ?
 		this.translation = new Coordinates();
-		this.rotationCenter = new Coordinates();
+		this.rotationCenter = new Coordinates(); //calculate real coordinate of this point ?
 	}
-	
+
 	@Override
 	public void scale(int reductionRate) {
 		// change position of the vertices accordingly ? How ?
@@ -40,7 +41,13 @@ public abstract class ShapeSimple implements Shape {
 	@Override
 	public void rotate(double angle) {
 		this.rotation += angle;
-		// Change vertices position ?
+		double angleRad = angle *Math.PI/180;
+		for(Coordinates point : vertices) {
+			point.setX((point.getX() - rotationCenter.getX()) * Math.cos(angleRad) - (point.getY() - rotationCenter.getY()) * Math.sin(angleRad) + rotationCenter.getX());
+			point.setY((point.getY() - rotationCenter.getY()) * Math.cos(angleRad) - (point.getX() - rotationCenter.getX()) * Math.sin(angleRad) + rotationCenter.getY());
+		}
+		//If position always first in vertices
+		position = vertices.get(0);
 	}
 
 	@Override
@@ -48,10 +55,7 @@ public abstract class ShapeSimple implements Shape {
 		// leave it at that for now
 	}
 	
-	public Coordinates getPosition() {
-		return position;
-	}
-	
+	//only for regularPolygon ?
 	public void addVertix(Coordinates position) {
 		vertices.add(position);
 	}
@@ -59,7 +63,7 @@ public abstract class ShapeSimple implements Shape {
 	/**
 	 * Observer
 	 **/
-	
+
 	@Override
 	public void attach(ObserverShape o) {
 		// TODO Auto-generated method stub
@@ -77,7 +81,8 @@ public abstract class ShapeSimple implements Shape {
 		// TODO Auto-generated method stub
 
 	}
-
+	
+    //getters and setters	
 	public double getRotation() {
 		return rotation;
 	}
@@ -118,7 +123,34 @@ public abstract class ShapeSimple implements Shape {
 		this.rotationCenter = rotationCenter;
 	}
 
+	public Coordinates getPosition() {
+		return position;
+	}
+	
 	public void setPosition(Coordinates position) {
 		this.position = position;
+	}
+	
+	//function for shapeGroup
+	public void addShape(Shape s) throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
+	
+	public void removeShape(Shape s) {}
+	
+	public Iterator<Shape> getChildren() {
+		return new Iterator<Shape>() {
+
+			@Override
+			public boolean hasNext() {
+				return false;
+			}
+
+			@Override
+			public Shape next() {
+				return null;
+			}
+			
+		};
 	}
 }
