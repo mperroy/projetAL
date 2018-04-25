@@ -10,12 +10,13 @@ import shapes.RectangleSimple;
 public class FXRectangle extends RectangleSimple{
 	private Rectangle r;
 	
-	// Needs to move ? 
+	// Needs to be moved ? 
 	private static double orgSceneX, orgSceneY;
 	private static double orgTranslateX, orgTranslateY;
 	
 	public FXRectangle() {
-		r = new Rectangle(100, 50, Color.BLACK);
+		r = new Rectangle(100, 50, Color.WHITE);
+		r.setStroke(Color.BLACK);
 		setWidth(r.getWidth());
 		setHeight(r.getHeight());
 		
@@ -43,6 +44,8 @@ public class FXRectangle extends RectangleSimple{
                     ((Rectangle)t.getSource()).setTranslateY(newTranslateY);
                 }
         });
+        
+        // To group shapes, use setondragdetected to add to a group of shapes
 	}
 	
 	public Rectangle getR() {
