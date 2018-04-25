@@ -1,5 +1,7 @@
 package gui;
 
+import java.util.ArrayList;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -9,24 +11,24 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.shape.Rectangle;
 import shapeFactory.FXRectangle;
+import shapeFactory.ShapeAbstractFactory;
+import shapes.Shape;
 
 public class FXView implements View {
 	
 	public static Scene scene;
 	public static BorderPane pane;
+	public static Button toolbarRectangle;
 	
 	public void drawFrame(Stage stage) {
 		stage.setTitle("Projet AL");
 		//controller = Controller.getInstance();
 		
 		pane = new BorderPane();
-		
-		
-		pane.setTop(drawCommandBar());
-		pane.setLeft(drawToolBar());
-		
-		// Factory here or in a controller ?
+		drawCommandBar();
+		drawToolBar();
 		
 //		FXRectangle rTest = new FXRectangle();
 //		
@@ -38,7 +40,7 @@ public class FXView implements View {
 		stage.show();
 	}
 	
-	public HBox drawCommandBar() {
+	public void drawCommandBar() {
 		HBox hbox = new HBox();
 	    hbox.setSpacing(5);
 
@@ -49,30 +51,35 @@ public class FXView implements View {
 	    
 	    hbox.getChildren().addAll(buttonSave, buttonLoad, buttonUndo, buttonRedo);
 	    
-	    return hbox;
+	    pane.setTop(hbox);
 	}
 	
-	public VBox drawToolBar() {
+	public void drawToolBar() {
 		
 		VBox vbox = new VBox();
 	    vbox.setPadding(new Insets(10, 0, 0, 0));
 	    vbox.setSpacing(5);
 
 	    Button toolbarRectangle = new Button("Rectangle");
-	    toolbarRectangle.setPrefSize(100, 20);
-	    
-	    toolbarRectangle.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	            pane.setCenter(new FXRectangle().getR());
-	        }
-	    });
-	    
-	    
+	    toolbarRectangle.setPrefSize(100, 20);  
 	    Button toolbarPolygon = new Button("Regular Polygon"); 
 	    toolbarPolygon.setPrefSize(100, 20);
 	    
 	    vbox.getChildren().addAll(toolbarRectangle, toolbarPolygon);
 	    
-	    return vbox;
+	    pane.setLeft(vbox);
+	}
+	
+	public void drawCenter(ArrayList<Shape> shapes) {
+		pane.setCenter(shapes);
+	}
+	
+	public void setupButtons(ShapeAbstractFactory factory, ArrayList<Shape> shapes) {
+		toolbarRectangle.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	            shapes.add(factory.getRectangle());
+	        	//pane.setCenter(((FXRectangle) factory.getRectangle()).getR());
+	        }
+	    });
 	}
 }
