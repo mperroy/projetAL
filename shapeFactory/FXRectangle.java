@@ -15,7 +15,7 @@ public class FXRectangle extends RectangleSimple{
 	private static double orgTranslateX, orgTranslateY;
 	
 	public FXRectangle() {
-		r = new Rectangle(200, 50, Color.BLACK);
+		r = new Rectangle(100, 50, Color.BLACK);
 		setWidth(r.getWidth());
 		setHeight(r.getHeight());
 		

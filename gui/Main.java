@@ -6,12 +6,13 @@ public class Main {
 	private static Controller controller;
 
 	public static void main(String[] args) {
-		if(args[1].equals("fx"))
-			controller = new FXController();
-		if(args[1].equals("awt"))
-			controller = new AWTController();
-		
-		controller.launch(args);
+//		if(args[0].equals("fx"))
+//			controller = new FXController();
+//		if(args[1].equals("awt"))
+//			controller = new AWTController();
+//		
+		controller = new FXController();
+		controller.launchController(args);
 		
 		//launch(args);
 	}

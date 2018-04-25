@@ -1,5 +1,5 @@
 package gui;
 
 public interface Controller {
-	public void launch(String[] args);
+	public void launchController(String[] args);
 }
