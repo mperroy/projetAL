@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import shapeFactory.FXRectangle;
+import shapeFactory.FXRegularPolygon;
 import shapeFactory.ShapeAbstractFactory;
 
 // Test
@@ -86,6 +87,12 @@ public class FXView implements View {
 		toolbarRectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
 	        public void handle(MouseEvent e) {
 	            centerPane.getChildren().add(((FXRectangle) factory.getRectangle()).getR());
+	        }
+	    });
+		
+		toolbarPolygon.setOnMouseClicked(new EventHandler<MouseEvent>() {
+	        public void handle(MouseEvent e) {
+	            centerPane.getChildren().add(((FXRegularPolygon) factory.getRegularPolygon()).getRP());
 	        }
 	    });
 		

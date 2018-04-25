@@ -12,7 +12,7 @@ public class RectangleSimple extends ShapeSimple {
 		this.borderCurve = 0;
 	}
 	
-	public RectangleSimple(Coordinates position, int width, int height) {
+	public RectangleSimple(Coordinates position, double width, double height) {
 		super(position);
 		this.width = width;
 		this.height = height;
