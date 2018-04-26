@@ -91,6 +91,7 @@ public class FXView implements View {
 		 * else vbox.getChildren().add(((FXRegularPolygon) it.next()).getRP());
 		 * }
 		 */
+		
 		/*
 		 * // Get the mini rectangle from a toolbar toolbarRectangle = new
 		 * Rectangle(100, 30, Color.WHITE);
@@ -107,12 +108,16 @@ public class FXView implements View {
 
 	public void setupButtons(ShapeAbstractFactory factory) {
 		toolbarRectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent e) {
-				centerPane.getChildren().add(
-						((FXRectangle) factory.getRectangle()).getR());
-			}
-		});
-
+	        public void handle(MouseEvent e) {
+	            centerPane.getChildren().add(((FXRectangle) factory.getRectangle()).getR());
+	        }
+	    });
+		
+		toolbarPolygon.setOnMouseClicked(new EventHandler<MouseEvent>() {
+	        public void handle(MouseEvent e) {
+	            centerPane.getChildren().add(((FXRegularPolygon) factory.getRegularPolygon()).getRP());
+	        }
+	    });
 		// setonmouseclicked regularpolygon, save, load, undo, redo
 	}
 }

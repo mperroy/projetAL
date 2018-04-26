@@ -4,7 +4,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
+import shapes.Coordinates;
 import shapes.RectangleSimple;
 
 public class FXRectangle extends RectangleSimple{
@@ -15,10 +15,9 @@ public class FXRectangle extends RectangleSimple{
 	private static double orgTranslateX, orgTranslateY;
 	
 	public FXRectangle() {
-		r = new Rectangle(100, 50, Color.WHITE);
+		super(new Coordinates(0, 0), 100, 50);
+		r = new Rectangle(getWidth(), getHeight(), Color.WHITE);
 		r.setStroke(Color.BLACK);
-		setWidth(r.getWidth());
-		setHeight(r.getHeight());
 		
 		// Border curve for javafx. How to do it for RegularPolygon since it's drawn with lines ?
 //		r.setArcHeight(15);
