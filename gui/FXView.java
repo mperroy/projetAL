@@ -37,7 +37,6 @@ public class FXView implements View {
 	public static Button buttonUndo;
 	public static Button buttonRedo;
 
-	// public static Button toolbarRectangle;
 	public static Button toolbarPolygon;
 	
 	public static Rectangle trashIcon;
@@ -53,8 +52,7 @@ public class FXView implements View {
 		centerPane = new Pane();
 		drawCommandBar();
 		
-		//drawToolBar(); //commenter pour le test
-		centerPane.setStyle("-fx-border-color: black;-fx-border-width: 2;\n");
+		centerPane.setStyle("-fx-border-color: black;-fx-border-width: 1;");
 		
 		pane.setCenter(centerPane);
 
@@ -128,6 +126,7 @@ public class FXView implements View {
 	        public void handle(MouseEvent e) {
 	        	FXRectangle fxr = (FXRectangle) factory.getRectangle();
 	        	fxr.setupMoveInBound(centerPane.getLayoutBounds());
+	        	fxr.setupEdition();
 	            centerPane.getChildren().add(fxr.getR());
 	        }
 	    });
@@ -136,6 +135,7 @@ public class FXView implements View {
 	        public void handle(MouseEvent e) {
 	        	FXRegularPolygon fxrp = (FXRegularPolygon) factory.getRegularPolygon();
 	        	fxrp.setupMoveInBound(centerPane.getLayoutBounds());
+	        	fxrp.setupEdition();
 	            centerPane.getChildren().add(fxrp.getRP());
 	        }
 	    });
