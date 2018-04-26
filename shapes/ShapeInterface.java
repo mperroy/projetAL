@@ -11,14 +11,8 @@ public interface ShapeInterface {
 	public void translation(Coordinates newPosition);
 	
 	//to make group of shape
-	public void addShape(ShapeInterface s); // exception in ShapeSimple
-	public void removeShape(ShapeInterface u); // nothing in UnitSimple
+	public void addShape(ShapeInterface s);
+	public void removeShape(ShapeInterface d);
 	public Iterator<ShapeInterface> getChildren(); //return null in ShapeSimple
 	
-	/**
-	 * Observer
-	 **/
-	public void attach(ObserverShape o);
-	public void detach(ObserverShape o);
-	public void notifyObserver();
 }

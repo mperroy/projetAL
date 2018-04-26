@@ -44,22 +44,4 @@ public class ShapeGroup implements ShapeInterface { // Composite de Shape
 
 	}
 
-	@Override
-	public void attach(ObserverShape o) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void detach(ObserverShape o) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void notifyObserver() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

@@ -59,28 +59,6 @@ public abstract class ShapeSimple implements ShapeInterface {
 	public void addVertix(Coordinates position) {
 		vertices.add(position);
 	}
-
-	/**
-	 * Observer
-	 **/
-
-	@Override
-	public void attach(ObserverShape o) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void detach(ObserverShape o) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void notifyObserver() {
-		// TODO Auto-generated method stub
-
-	}
 	
     //getters and setters	
 	public double getRotation() {
