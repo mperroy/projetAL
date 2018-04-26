@@ -24,4 +24,12 @@ public class ShapeToolbar {
 	public Iterator<ShapeInterface> getChildren() {
 		return shapeInToolbar.iterator();
 	}
+	
+	public Memento createMemento() {
+		return new Memento(shapeInToolbar);
+	}
+	
+	public void setMemento(Memento m) {
+		shapeInToolbar = m.getState();
+	}
 }
