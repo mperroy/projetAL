@@ -1,8 +1,6 @@
 package gui;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -51,7 +49,7 @@ public class FXView implements View {
 	public static Rectangle trashIcon;
 	public static Rectangle toolbarRectangle;
 
-	List<Node> selectionModel = new ArrayList<Node>();
+	ArrayList<Node> selectionModel = new ArrayList<Node>();
 
 	public void drawFrame(Stage stage) {
 		stage.setTitle("Projet AL");
@@ -115,7 +113,7 @@ public class FXView implements View {
 
 		vbox.getChildren().addAll(toolbarRectangle, toolbarPolygon);
 
-		// drawTrash();
+		drawTrash();
 
 		pane.setLeft(vbox);
 	}
@@ -144,19 +142,40 @@ public class FXView implements View {
 
 		toolbarPolygon.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
-				FXRegularPolygon fxrp = (FXRegularPolygon) factory
-						.getRegularPolygon();
+				FXRegularPolygon fxrp = (FXRegularPolygon) factory.getRegularPolygon();
 				fxrp.setupMoveInBound(centerPane.getLayoutBounds());
 				setupRightClick(fxrp);
 				centerPane.getChildren().add(fxrp.getShape());
 			}
 		});
-		/*//Interaction of trash
+		
+		for(Node n :vbox.getChildren()) {
+			n.setOnMouseClicked(new EventHandler<MouseEvent>() { 
+				public void handle(MouseEvent e) { 
+					if (n instanceof Rectangle) { 
+						FXRectangle fxr = (FXRectangle) factory.getRectangle(); 
+						fxr.setupMoveInBound(vbox.getLayoutBounds());
+						centerPane.getChildren().add(((FXRectangle) fxr).getShape());
+					}
+					if (n instanceof Polygon) { 
+						FXRegularPolygon fxrp = (FXRegularPolygon) factory .getRegularPolygon();
+						fxrp.setupMoveInBound(vbox.getLayoutBounds());
+						centerPane.getChildren().add(((FXRegularPolygon) fxrp).getShape());
+					}
+				}
+			});
+		}
+
+//			centerPane.setOnMouseDragOver(new EventHandler<MouseEvent>() { 
+//				public void handle(MouseEvent e) { 
+//				}
+//			});
+
 		trashIcon.setOnMouseDragReleased(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				centerPane.getChildren().remove(e.getSource());
 			}
-		});*/
+		});
 	}
 
 	public void setupRightClick(ShapeInterface shape) {
@@ -183,11 +202,9 @@ public class FXView implements View {
 		suppr.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				if (shape instanceof FXRectangle) {
-					centerPane.getChildren().remove(
-							((FXRectangle) shape).getShape());
+					centerPane.getChildren().remove(((FXRectangle) shape).getShape());
 				} else {
-					centerPane.getChildren().remove(
-							((FXRegularPolygon) shape).getShape());
+					centerPane.getChildren().remove(((FXRegularPolygon) shape).getShape());
 				}
 			}
 		});
@@ -233,14 +250,12 @@ public class FXView implements View {
 		button1.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				try {
-					((Rectangle) fxr.getShape()).setWidth(Double
-							.parseDouble(text1.getText()));
+					((Rectangle) fxr.getShape()).setWidth(Double.parseDouble(text1.getText()));
 				} catch (NumberFormatException | NullPointerException exc) {
 				}
 
 				try {
-					((Rectangle) fxr.getShape()).setHeight(Double
-							.parseDouble(text2.getText()));
+					((Rectangle) fxr.getShape()).setHeight(Double.parseDouble(text2.getText()));
 				} catch (NumberFormatException | NullPointerException exc) {
 				}
 			}
