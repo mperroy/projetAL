@@ -3,7 +3,7 @@ package gui;
 import java.util.Iterator;
 
 import shapeFactory.ShapeAbstractFactory;
-import shapes.Shape;
+import shapes.ShapeInterface;
 
 public class AWTView implements View {
 
@@ -20,7 +20,7 @@ public class AWTView implements View {
 	}
 
 	@Override
-	public void drawToolBar(Iterator<Shape> iterator) {
+	public void drawToolBar(Iterator<ShapeInterface> iterator) {
 		// TODO Auto-generated method stub
 		
 	}

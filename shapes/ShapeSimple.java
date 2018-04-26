@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import observer.ObserverShape;
 
-public abstract class ShapeSimple implements Shape {
+public abstract class ShapeSimple implements ShapeInterface {
 	private double rotation;
 	private ColorSimple color;
 	private Coordinates position; // position of point in top left corner
@@ -170,14 +170,14 @@ public abstract class ShapeSimple implements Shape {
 	}
 	
 	//function for shapeGroup
-	public void addShape(Shape s) throws UnsupportedOperationException {
+	public void addShape(ShapeInterface s) throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 	
-	public void removeShape(Shape s) {}
+	public void removeShape(ShapeInterface s) {}
 	
-	public Iterator<Shape> getChildren() {
-		return new Iterator<Shape>() {
+	public Iterator<ShapeInterface> getChildren() {
+		return new Iterator<ShapeInterface>() {
 
 			@Override
 			public boolean hasNext() {
@@ -185,7 +185,7 @@ public abstract class ShapeSimple implements Shape {
 			}
 
 			@Override
-			public Shape next() {
+			public ShapeInterface next() {
 				return null;
 			}
 			

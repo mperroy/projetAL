@@ -2,13 +2,20 @@ package gui;
 
 import java.util.Iterator;
 
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -18,9 +25,10 @@ import javafx.stage.Stage;
 import shapeFactory.FXRectangle;
 import shapeFactory.FXRegularPolygon;
 import shapeFactory.ShapeAbstractFactory;
-import shapes.Shape;
+import shapes.ShapeInterface;
 // Test
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public class FXView implements View {
 
@@ -77,18 +85,18 @@ public class FXView implements View {
 	    pane.setTop(hbox);
 	}
 	
-	public void drawToolBar(Iterator<Shape> it) { // setOnMouseClicked on DrawShape. Toolbar setup from elsewhere ? (Memento)
+	public void drawToolBar(Iterator<ShapeInterface> it) { // setOnMouseClicked on DrawShape. Toolbar setup from elsewhere ? (Memento)
 		vbox = new VBox();
 		vbox.setPadding(new Insets(0, 10, 10, 10));
 	    vbox.setSpacing(5);
 
 
 	    while (it.hasNext()) {
-	    	Shape tmp = it.next();
+	    	ShapeInterface tmp = it.next();
 			if (tmp instanceof FXRectangle)
-				vbox.getChildren().add(((FXRectangle) tmp).getR());
+				vbox.getChildren().add(((FXRectangle) tmp).getShape());
 			else 
-				vbox.getChildren().add(((FXRegularPolygon) tmp).getRP());
+				vbox.getChildren().add(((FXRegularPolygon) tmp).getShape());
 		}  
 	    
 	    // Get the mini rectangle from a toolbar
@@ -126,8 +134,8 @@ public class FXView implements View {
 	        public void handle(MouseEvent e) {
 	        	FXRectangle fxr = (FXRectangle) factory.getRectangle();
 	        	fxr.setupMoveInBound(centerPane.getLayoutBounds());
-	        	fxr.setupEdition();
-	            centerPane.getChildren().add(fxr.getR());
+	        	setupRightClick(fxr);
+	            centerPane.getChildren().add(fxr.getShape());
 	        }
 	    });
 		
@@ -135,8 +143,8 @@ public class FXView implements View {
 	        public void handle(MouseEvent e) {
 	        	FXRegularPolygon fxrp = (FXRegularPolygon) factory.getRegularPolygon();
 	        	fxrp.setupMoveInBound(centerPane.getLayoutBounds());
-	        	fxrp.setupEdition();
-	            centerPane.getChildren().add(fxrp.getRP());
+	        	setupRightClick(fxrp);
+	            centerPane.getChildren().add(fxrp.getShape());
 	        }
 	    });
 				
@@ -147,4 +155,110 @@ public class FXView implements View {
 	    });
 		// setonmouseclicked save, load, undo, redo
 	}
+	
+	public void setupRightClick(ShapeInterface shape) {
+		ContextMenu contextMenu = new ContextMenu();
+		Shape s; 
+		if(shape instanceof FXRectangle) {
+    		s = ((FXRectangle) shape).getShape();
+    	}
+    	else {
+    		s = ((FXRegularPolygon) shape).getShape();
+    	}
+		
+	    MenuItem item1 = new MenuItem("Edition");
+	    item1.setOnAction(new EventHandler<ActionEvent>() {
+	        public void handle(ActionEvent event) {
+	        	if(shape instanceof FXRectangle) {
+		    		setupEditionRectangle((FXRectangle) shape);		    		
+	        	}
+	        	else {
+	        		setupEditionRegularPolygon((FXRegularPolygon) shape); 
+	        	}	
+	        }
+	    });
+	    
+	    contextMenu.getItems().addAll(item1);
+		
+	    s.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+	    	public void handle(ContextMenuEvent event) {
+	    		contextMenu.show(s, event.getScreenX(), event.getScreenY());
+	        }
+	    });
+	}
+	
+	public void setupEditionRectangle(FXRectangle fxr) {
+		Stage dialog = new Stage();
+    	GridPane grid = new GridPane();
+    	Scene sceneDialog = new Scene(grid, 300, 200);
+
+    	Label label1 = new Label("Width : ");
+    	Label label2 = new Label("Height : ");
+    	TextField text1 = new TextField();
+    	TextField text2 = new TextField();
+    	Button button1 = new Button("Apply");
+    	Button button2 = new Button("Close");
+
+    	grid.add(label1, 1, 1);
+    	grid.add(text1, 2, 1);
+    	grid.add(label2, 1, 2);
+    	grid.add(text2, 2, 2);
+    	grid.add(button1, 1, 3);
+    	grid.add(button2, 2, 3);
+
+    	button1.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+            	((Rectangle)fxr.getShape()).setWidth(Double.parseDouble(text1.getText()));
+            	((Rectangle)fxr.getShape()).setHeight(Double.parseDouble(text2.getText()));
+            }
+        });
+    	
+    	button2.setOnAction(new EventHandler<ActionEvent>() {
+    		public void handle(ActionEvent e) {
+    			dialog.close();
+    		}
+    	});
+    	
+    	dialog.setScene(sceneDialog);
+    	dialog.show();
+	}
+	
+	public void setupEditionRegularPolygon(FXRegularPolygon fxrp) {
+		Stage dialog = new Stage();
+    	GridPane grid = new GridPane();
+    	Scene sceneDialog = new Scene(grid, 300, 200);
+
+    	Label label1 = new Label("Edge length  : ");
+    	Label label2 = new Label("Edge number : ");
+    	TextField text1 = new TextField();
+    	TextField text2 = new TextField();
+    	Button button1 = new Button("Apply");
+    	Button button2 = new Button("Close");
+
+    	grid.add(label1, 1, 1);
+    	grid.add(text1, 2, 1);
+    	grid.add(label2, 1, 2);
+    	grid.add(text2, 2, 2);
+    	grid.add(button1, 1, 3);
+    	grid.add(button2, 2, 3);
+
+    	button1.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+            	fxrp.setEdgeLength(Double.parseDouble(text1.getText()));
+    			fxrp.setEdgeNumber(Integer.parseInt(text2.getText()));
+    			fxrp.drawVertices();
+            }
+        });
+    	
+    	button2.setOnAction(new EventHandler<ActionEvent>() {
+    		public void handle(ActionEvent e) {
+    			dialog.close();
+    		}
+    	});
+    	
+    	dialog.setScene(sceneDialog);
+    	dialog.show();
+	}
 }
+	    
+	    

@@ -5,12 +5,12 @@ import java.util.Iterator;
 
 import observer.ObserverShape;
 
-public class ShapeGroup implements Shape { // Composite de Shape
+public class ShapeGroup implements ShapeInterface { // Composite de Shape
 
-	private ArrayList<Shape> shapeMember;
+	private ArrayList<ShapeInterface> shapeMember;
 	
 	public ShapeGroup() {
-		shapeMember = new ArrayList<Shape>();
+		shapeMember = new ArrayList<ShapeInterface>();
 	}
 	@Override
 	public void scale(int reductionRate) {
@@ -20,22 +20,22 @@ public class ShapeGroup implements Shape { // Composite de Shape
 
 	@Override
 	public void rotate(double angle) {
-		for(Shape s : shapeMember)
+		for(ShapeInterface s : shapeMember)
 			s.rotate(angle);
 	}
 
 	@Override
-	public void addShape(Shape u) {
+	public void addShape(ShapeInterface u) {
 		this.shapeMember.add(u);
 	}
 
 	@Override
-	public void removeShape(Shape u) {
+	public void removeShape(ShapeInterface u) {
 		this.shapeMember.remove(u);
 	}
 
 	@Override
-	public Iterator<Shape> getChildren() {
+	public Iterator<ShapeInterface> getChildren() {
 		return shapeMember.iterator();
 	}
 	@Override

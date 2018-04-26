@@ -5,23 +5,23 @@ import java.util.Iterator;
 
 public class ShapeToolbar {
 	
-	private ArrayList<Shape> shapeInToolbar; // ShapeGroup et pas ArrayList ?
+	private ArrayList<ShapeInterface> shapeInToolbar; // ShapeGroup et pas ArrayList ?
 	
 	public ShapeToolbar() {
-		shapeInToolbar = new ArrayList <Shape> ();
+		shapeInToolbar = new ArrayList <ShapeInterface> ();
 		//shapeInToolbar.add(new RectangleSimple());
 		//shapeInToolbar.add(new RegularPolygonSimple());
 	}
 	
-	public void add(Shape s) {
+	public void add(ShapeInterface s) {
 		shapeInToolbar.add(s);
 	}
 	
-	public void remove(Shape s) {
+	public void remove(ShapeInterface s) {
 		shapeInToolbar.remove(s);
 	}
 	
-	public Iterator<Shape> getChildren() {
+	public Iterator<ShapeInterface> getChildren() {
 		return shapeInToolbar.iterator();
 	}
 }
