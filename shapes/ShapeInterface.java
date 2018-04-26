@@ -12,7 +12,7 @@ public interface ShapeInterface {
 	
 	//to make group of shape
 	public void addShape(ShapeInterface s);
-	public void removeShape(ShapeInterface d);
+	public void removeShape(ShapeInterface s);
 	public Iterator<ShapeInterface> getChildren(); //return null in ShapeSimple
 	
 }
