@@ -182,105 +182,129 @@ public class FXView implements View {
 		ContextMenu contextMenu = new ContextMenu();
 		Shape s; 
 		if(shape instanceof FXRectangle) {
-    		s = ((FXRectangle) shape).getShape();
-    	}
-    	else {
-    		s = ((FXRegularPolygon) shape).getShape();
-    	}
-		
-	    MenuItem item1 = new MenuItem("Edition");
-	    item1.setOnAction(new EventHandler<ActionEvent>() {
-	        public void handle(ActionEvent event) {
-	        	if(shape instanceof FXRectangle) {
-		    		setupEditionRectangle((FXRectangle) shape);		    		
-	        	}
-	        	else {
-	        		setupEditionRegularPolygon((FXRegularPolygon) shape); 
-	        	}	
-	        }
-	    });
-	    
-	    contextMenu.getItems().addAll(item1);
-		
-	    s.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
-	    	public void handle(ContextMenuEvent event) {
-	    		contextMenu.show(s, event.getScreenX(), event.getScreenY());
-	        }
-	    });
+			s = ((FXRectangle) shape).getShape();
+		}
+		else {
+			s = ((FXRegularPolygon) shape).getShape();
+		}
+
+		MenuItem item1 = new MenuItem("Edition");
+		item1.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				if(shape instanceof FXRectangle) {
+					setupEditionRectangle((FXRectangle) shape);		    		
+				}
+				else {
+					setupEditionRegularPolygon((FXRegularPolygon) shape); 
+				}	
+			}
+		});
+
+		MenuItem item2 = new MenuItem("Supprimer");
+		item2.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				if(shape instanceof FXRectangle) {
+					centerPane.getChildren().remove(((FXRectangle)shape).getShape());	    		
+				}
+				else {
+					centerPane.getChildren().remove(((FXRegularPolygon)shape).getShape());
+				}	        	
+			}
+		});
+
+		contextMenu.getItems().addAll(item1, item2);
+
+		s.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+			public void handle(ContextMenuEvent event) {
+				contextMenu.show(s, event.getScreenX(), event.getScreenY());
+			}
+		});
 	}
 	
-	public void setupEditionRectangle(FXRectangle fxr) {
-		Stage dialog = new Stage();
-    	GridPane grid = new GridPane();
-    	Scene sceneDialog = new Scene(grid, 300, 200);
+	// Can be refactored more effectively
+		public void setupEditionRectangle(FXRectangle fxr) {
+			Stage dialog = new Stage();
+			GridPane grid = new GridPane();
+			Scene sceneDialog = new Scene(grid, 300, 200);
 
-    	Label label1 = new Label("Width : ");
-    	Label label2 = new Label("Height : ");
-    	TextField text1 = new TextField();
-    	TextField text2 = new TextField();
-    	Button button1 = new Button("Apply");
-    	Button button2 = new Button("Close");
+			Label label1 = new Label("Width : ");
+			Label label2 = new Label("Height : ");
+			TextField text1 = new TextField();
+			TextField text2 = new TextField();
+			Button button1 = new Button("Apply");
+			Button button2 = new Button("Close");
 
-    	grid.add(label1, 1, 1);
-    	grid.add(text1, 2, 1);
-    	grid.add(label2, 1, 2);
-    	grid.add(text2, 2, 2);
-    	grid.add(button1, 1, 3);
-    	grid.add(button2, 2, 3);
+			grid.add(label1, 1, 1);
+			grid.add(text1, 2, 1);
+			grid.add(label2, 1, 2);
+			grid.add(text2, 2, 2);
+			grid.add(button1, 1, 3);
+			grid.add(button2, 2, 3);
 
-    	button1.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-            	((Rectangle)fxr.getShape()).setWidth(Double.parseDouble(text1.getText()));
-            	((Rectangle)fxr.getShape()).setHeight(Double.parseDouble(text2.getText()));
-            }
-        });
-    	
-    	button2.setOnAction(new EventHandler<ActionEvent>() {
-    		public void handle(ActionEvent e) {
-    			dialog.close();
-    		}
-    	});
-    	
-    	dialog.setScene(sceneDialog);
-    	dialog.show();
-	}
-	
-	public void setupEditionRegularPolygon(FXRegularPolygon fxrp) {
-		Stage dialog = new Stage();
-    	GridPane grid = new GridPane();
-    	Scene sceneDialog = new Scene(grid, 300, 200);
+			button1.setOnAction(new EventHandler<ActionEvent>() {
+				public void handle(ActionEvent e) {
+					try {
+						((Rectangle)fxr.getShape()).setWidth(Double.parseDouble(text1.getText()));
+					}catch(NumberFormatException | NullPointerException exc){}
 
-    	Label label1 = new Label("Edge length  : ");
-    	Label label2 = new Label("Edge number : ");
-    	TextField text1 = new TextField();
-    	TextField text2 = new TextField();
-    	Button button1 = new Button("Apply");
-    	Button button2 = new Button("Close");
+					try {
+						((Rectangle)fxr.getShape()).setHeight(Double.parseDouble(text2.getText()));
+					}catch(NumberFormatException | NullPointerException exc){}
+				}
+			});
 
-    	grid.add(label1, 1, 1);
-    	grid.add(text1, 2, 1);
-    	grid.add(label2, 1, 2);
-    	grid.add(text2, 2, 2);
-    	grid.add(button1, 1, 3);
-    	grid.add(button2, 2, 3);
+			button2.setOnAction(new EventHandler<ActionEvent>() {
+				public void handle(ActionEvent e) {
+					dialog.close();
+				}
+			});
 
-    	button1.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-            	fxrp.setEdgeLength(Double.parseDouble(text1.getText()));
-    			fxrp.setEdgeNumber(Integer.parseInt(text2.getText()));
-    			fxrp.drawVertices();
-            }
-        });
-    	
-    	button2.setOnAction(new EventHandler<ActionEvent>() {
-    		public void handle(ActionEvent e) {
-    			dialog.close();
-    		}
-    	});
-    	
-    	dialog.setScene(sceneDialog);
-    	dialog.show();
-	}
+			dialog.setScene(sceneDialog);
+			dialog.show();
+		}
+
+		public void setupEditionRegularPolygon(FXRegularPolygon fxrp) {
+			Stage dialog = new Stage();
+			GridPane grid = new GridPane();
+			Scene sceneDialog = new Scene(grid, 300, 200);
+
+			Label label1 = new Label("Edge length  : ");
+			Label label2 = new Label("Edge number : ");
+			TextField text1 = new TextField();
+			TextField text2 = new TextField();
+			Button button1 = new Button("Apply");
+			Button button2 = new Button("Close");
+
+			grid.add(label1, 1, 1);
+			grid.add(text1, 2, 1);
+			grid.add(label2, 1, 2);
+			grid.add(text2, 2, 2);
+			grid.add(button1, 1, 3);
+			grid.add(button2, 2, 3);
+
+			button1.setOnAction(new EventHandler<ActionEvent>() {
+				public void handle(ActionEvent e) {
+					try {
+						fxrp.setEdgeLength(Double.parseDouble(text1.getText()));
+					}catch(NumberFormatException | NullPointerException exc){}
+
+					try {
+						fxrp.setEdgeNumber(Integer.parseInt(text2.getText()));
+					}catch(NumberFormatException | NullPointerException exc){}
+
+					fxrp.drawVertices();
+				}
+			});
+
+			button2.setOnAction(new EventHandler<ActionEvent>() {
+				public void handle(ActionEvent e) {
+					dialog.close();
+				}
+			});
+
+			dialog.setScene(sceneDialog);
+			dialog.show();
+		}
 }
 	    
 	    
