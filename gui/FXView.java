@@ -46,11 +46,12 @@ public class FXView implements View {
 	public static Button buttonRedo;
 
 	public static Button toolbarPolygon;
-	
+	//public static FXRegularPolygon toolbarPolygon;
 	public static Rectangle trashIcon;
 	
 	// Test
 	public static Rectangle toolbarRectangle;
+	//public static FXRectangle toolbarRectangle;
 
 	public void drawFrame(Stage stage) {
 		stage.setTitle("Projet AL");
@@ -147,7 +148,28 @@ public class FXView implements View {
 	            centerPane.getChildren().add(fxrp.getShape());
 	        }
 	    });
-				
+		//---------- Code Test pour la toolbar drag and drop -----------------//
+				/*
+				for(Node n :vbox.getChildren()) { 
+					n.setOnMouseDragged(new EventHandler<MouseEvent>() { 
+						public void handle(MouseEvent e) { 
+							if (n instanceof Rectangle) { 
+								FXRectangle fxr = (FXRectangle) factory.getRectangle(); 
+								fxr.setupMoveInBound(vbox.getLayoutBounds());
+								toolbarRectangle = fxr;
+							}
+							if (n instanceof Polygon) { 
+								FXRegularPolygon fxrp = (FXRegularPolygon) factory .getRegularPolygon();
+								fxrp.setupMoveInBound(vbox.getLayoutBounds());
+								toolbarPolygon = fxrp;
+							}
+					    }
+					});
+				 centerPane.setOnMouseDragOver(new EventHandler<MouseEvent>() { 
+						public void handle(MouseEvent e) { 
+					    }
+					});
+					*/		
 		trashIcon.setOnMouseDragReleased(new EventHandler<MouseEvent>() {
 	        public void handle(MouseEvent e) {
 	            centerPane.getChildren().remove(e.getSource());
