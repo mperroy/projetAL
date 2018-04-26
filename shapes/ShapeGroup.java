@@ -3,24 +3,23 @@ package shapes;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import observer.ObserverShape;
-
-public class ShapeGroup implements ShapeInterface { // Composite de Shape
+public class ShapeGroup implements ShapeInterface {
 
 	private ArrayList<ShapeInterface> shapeMember;
-	
+
 	public ShapeGroup() {
 		shapeMember = new ArrayList<ShapeInterface>();
 	}
+
 	@Override
 	public void scale(int reductionRate) {
-		// TODO Auto-generated method stub
-
+		for (ShapeInterface s : shapeMember)
+			s.scale(reductionRate);
 	}
 
 	@Override
 	public void rotate(double angle) {
-		for(ShapeInterface s : shapeMember)
+		for (ShapeInterface s : shapeMember)
 			s.rotate(angle);
 	}
 
@@ -38,28 +37,11 @@ public class ShapeGroup implements ShapeInterface { // Composite de Shape
 	public Iterator<ShapeInterface> getChildren() {
 		return shapeMember.iterator();
 	}
+
 	@Override
 	public void translation(Coordinates newPosition) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void attach(ObserverShape o) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void detach(ObserverShape o) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void notifyObserver() {
-		// TODO Auto-generated method stub
-
+		for (ShapeInterface s : shapeMember)
+			s.translation(newPosition);
 	}
 
 }
