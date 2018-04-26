@@ -3,12 +3,12 @@ package shapes;
 public class Coordinates {
 	private double x;
 	private double y;
-	
+
 	public Coordinates() {
 		this.x = 0;
 		this.y = 0;
 	}
-	
+
 	public Coordinates(double x, double y) {
 		this.x = x;
 		this.y = y;
@@ -29,7 +29,7 @@ public class Coordinates {
 	public void setY(double y) {
 		this.y = y;
 	}
-	
+
 	public Coordinates clone() {
 		return new Coordinates(x, y);
 	}
