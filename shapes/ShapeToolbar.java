@@ -9,8 +9,6 @@ public class ShapeToolbar {
 	
 	public ShapeToolbar() {
 		shapeInToolbar = new ArrayList <ShapeInterface> ();
-		//shapeInToolbar.add(new RectangleSimple());
-		//shapeInToolbar.add(new RegularPolygonSimple());
 	}
 	
 	public void add(ShapeInterface s) {
