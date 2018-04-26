@@ -1,11 +1,14 @@
 package gui;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -25,6 +28,7 @@ import javafx.stage.Stage;
 import shapeFactory.FXRectangle;
 import shapeFactory.FXRegularPolygon;
 import shapeFactory.ShapeAbstractFactory;
+import shapes.ShapeGroup;
 import shapes.ShapeInterface;
 // Test
 import javafx.scene.shape.Rectangle;
@@ -52,6 +56,8 @@ public class FXView implements View {
 	// Test
 	public static Rectangle toolbarRectangle;
 	//public static FXRectangle toolbarRectangle;
+	
+	List<Node> selectionModel = new ArrayList<Node>();
 
 	public void drawFrame(Stage stage) {
 		stage.setTitle("Projet AL");
@@ -68,6 +74,20 @@ public class FXView implements View {
 		scene = new Scene(pane, 600, 600);
 
 		stage.setScene(scene);
+		//Multiple selection
+		centerPane.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+
+            if( event.isControlDown()) {
+                selectionModel.add( (Node) event.getSource());
+
+                // logging
+                System.out.println("Items in model:");
+                selectionModel.forEach(n -> System.out.println(n));
+            }
+            else
+            	selectionModel.removeAll(selectionModel);
+
+        });
 		stage.show();
 	}
 
@@ -188,8 +208,8 @@ public class FXView implements View {
 			s = ((FXRegularPolygon) shape).getShape();
 		}
 
-		MenuItem item1 = new MenuItem("Edition");
-		item1.setOnAction(new EventHandler<ActionEvent>() {
+		MenuItem edition = new MenuItem("Edit");
+		edition.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				if(shape instanceof FXRectangle) {
 					setupEditionRectangle((FXRectangle) shape);		    		
@@ -200,8 +220,8 @@ public class FXView implements View {
 			}
 		});
 
-		MenuItem item2 = new MenuItem("Supprimer");
-		item2.setOnAction(new EventHandler<ActionEvent>() {
+		MenuItem suppr = new MenuItem("Delete");
+		suppr.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				if(shape instanceof FXRectangle) {
 					centerPane.getChildren().remove(((FXRectangle)shape).getShape());	    		
@@ -211,8 +231,18 @@ public class FXView implements View {
 				}	        	
 			}
 		});
+		 MenuItem group = new MenuItem("Group");
+		    group.setOnAction(new EventHandler<ActionEvent>() {
+		        public void handle(ActionEvent event) {
+		        	ShapeInterface shapeGroup = new ShapeGroup();
+		        	for(Node n : selectionModel) {
+		        		shapeGroup.addShape((ShapeInterface) n);
+		        	}
+		        }
+		    });
+		    contextMenu.getItems().addAll(edition, group);
 
-		contextMenu.getItems().addAll(item1, item2);
+		contextMenu.getItems().addAll(edition, suppr, group);
 
 		s.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
 			public void handle(ContextMenuEvent event) {
