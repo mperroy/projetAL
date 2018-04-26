@@ -186,7 +186,7 @@ public class FXView implements View {
 	        }
 	    });
 	}
-	
+	// Can be refactored more effectively
 	public void setupEditionRectangle(FXRectangle fxr) {
 		Stage dialog = new Stage();
     	GridPane grid = new GridPane();
@@ -208,8 +208,13 @@ public class FXView implements View {
 
     	button1.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-            	((Rectangle)fxr.getShape()).setWidth(Double.parseDouble(text1.getText()));
-            	((Rectangle)fxr.getShape()).setHeight(Double.parseDouble(text2.getText()));
+            	try {
+            		((Rectangle)fxr.getShape()).setWidth(Double.parseDouble(text1.getText()));
+            	}catch(NumberFormatException | NullPointerException exc){}
+            	
+            	try {
+                	((Rectangle)fxr.getShape()).setHeight(Double.parseDouble(text2.getText()));
+            	}catch(NumberFormatException | NullPointerException exc){}
             }
         });
     	
@@ -244,8 +249,14 @@ public class FXView implements View {
 
     	button1.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-            	fxrp.setEdgeLength(Double.parseDouble(text1.getText()));
-    			fxrp.setEdgeNumber(Integer.parseInt(text2.getText()));
+            	try {
+            		fxrp.setEdgeLength(Double.parseDouble(text1.getText()));
+            	}catch(NumberFormatException | NullPointerException exc){}
+            	
+            	try {
+        			fxrp.setEdgeNumber(Integer.parseInt(text2.getText()));
+            	}catch(NumberFormatException | NullPointerException exc){}
+            	
     			fxrp.drawVertices();
             }
         });
