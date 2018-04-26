@@ -10,7 +10,7 @@ public abstract class ShapeSimple implements Shape {
 	private ColorSimple color;
 	private Coordinates position; // position of point in top left corner
 	private ArrayList<Coordinates> vertices; //always position first in ?
-	private Coordinates translation; // à enlever si pas utile
+	private Coordinates translation; // ï¿½ enlever si pas utile
 	private Coordinates rotationCenter;
 
 	// Constructor ? Called in the abstract factory ?
@@ -129,6 +129,44 @@ public abstract class ShapeSimple implements Shape {
 	
 	public void setPosition(Coordinates position) {
 		this.position = position;
+	}
+	
+	// Other function
+	
+	public double getMinX() {
+		double res = vertices.get(0).getX();
+		for(Coordinates c : vertices) {
+			if(c.getX() < res)
+				res = c.getX();
+		}
+		return res;
+	}
+	
+	public double getMaxX() {
+		double res = vertices.get(0).getX();
+		for(Coordinates c : vertices) {
+			if(c.getX() > res)
+				res = c.getX();
+		}
+		return res;
+	}
+	
+	public double getMinY() {
+		double res = vertices.get(0).getY();
+		for(Coordinates c : vertices) {
+			if(c.getY() < res)
+				res = c.getY();
+		}
+		return res;
+	}
+	
+	public double getMaxY() {
+		double res = vertices.get(0).getY();
+		for(Coordinates c : vertices) {
+			if(c.getY() > res)
+				res = c.getY();
+		}
+		return res;
 	}
 	
 	//function for shapeGroup

@@ -1,6 +1,9 @@
 package shapeFactory;
 
+import java.util.ArrayList;
+
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -21,7 +24,9 @@ public class FXRegularPolygon extends RegularPolygonSimple {
 		
 		rP.setFill(Color.WHITE);
 		rP.setStroke(Color.BLACK);
-		
+	}
+	
+	public void setupMoveInBound(Bounds bounds) {
 		rP.setOnMousePressed(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent t) {
                 orgSceneX = t.getSceneX();
@@ -37,9 +42,12 @@ public class FXRegularPolygon extends RegularPolygonSimple {
                     double offsetY = t.getSceneY() - orgSceneY;
                     double newTranslateX = orgTranslateX + offsetX;
                     double newTranslateY = orgTranslateY + offsetY;
-                     
-                    ((Polygon)t.getSource()).setTranslateX(newTranslateX);
-                    ((Polygon)t.getSource()).setTranslateY(newTranslateY);
+                    
+                    if(newTranslateX+getMinX() > bounds.getMinX() && newTranslateX+getMaxX() < bounds.getMaxX()
+                    		&& newTranslateY+getMinY() > bounds.getMinY() && newTranslateY+getMaxY() < bounds.getMaxY()) { 
+                    	((Polygon)t.getSource()).setTranslateX(newTranslateX);
+                    	((Polygon)t.getSource()).setTranslateY(newTranslateY);
+                    }
                 }
         });
 	}
@@ -56,10 +64,15 @@ public class FXRegularPolygon extends RegularPolygonSimple {
 		double x;
 		double y;
 		
+		ArrayList<Coordinates> vertices = new ArrayList<Coordinates>();
+		
 		for(int i = 0 ; i < getEdgeNumber() ; i++) {
 			x = getEdgeLength() * Math.cos(2*Math.PI*i/getEdgeNumber() + 60) + x_center;
 			y = getEdgeLength() * Math.sin(2*Math.PI*i/getEdgeNumber() + 60) + y_center;
 			rP.getPoints().addAll(x, y);
+			
+			vertices.add(new Coordinates(x, y));
 		}
+		setVertices(vertices);
 	}
 }

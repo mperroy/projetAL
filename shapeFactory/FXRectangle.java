@@ -1,6 +1,7 @@
 package shapeFactory;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -19,9 +20,14 @@ public class FXRectangle extends RectangleSimple{
 		r = new Rectangle(getWidth(), getHeight(), Color.WHITE);
 		r.setStroke(Color.BLACK);
 		
-		// Border curve for javafx. How to do it for RegularPolygon since it's drawn with lines ?
+		// Border curve for javafx. 
 //		r.setArcHeight(15);
 //	    r.setArcWidth(15);
+        
+        // To group shapes, use setondragdetected to add to a group of shapes
+	}
+	
+	public void setupMoveInBound(Bounds bounds) {
 		
 		r.setOnMousePressed(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent t) {
@@ -38,13 +44,13 @@ public class FXRectangle extends RectangleSimple{
                     double offsetY = t.getSceneY() - orgSceneY;
                     double newTranslateX = orgTranslateX + offsetX;
                     double newTranslateY = orgTranslateY + offsetY;
-                     
-                    ((Rectangle)t.getSource()).setTranslateX(newTranslateX);
-                    ((Rectangle)t.getSource()).setTranslateY(newTranslateY);
+                    if(newTranslateX+getMinX() > bounds.getMinX() && newTranslateX+getMaxX() < bounds.getMaxX()
+                    		&& newTranslateY+getMinY() > bounds.getMinY() && newTranslateY+getMaxY() < bounds.getMaxY()) { 
+                    	((Rectangle)t.getSource()).setTranslateX(newTranslateX);
+                    	((Rectangle)t.getSource()).setTranslateY(newTranslateY);
+                    }
                 }
         });
-        
-        // To group shapes, use setondragdetected to add to a group of shapes
 	}
 	
 	public Rectangle getR() {

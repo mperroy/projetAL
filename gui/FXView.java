@@ -126,13 +126,17 @@ public class FXView implements View {
 		
 		toolbarRectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
 	        public void handle(MouseEvent e) {
-	            centerPane.getChildren().add(((FXRectangle) factory.getRectangle()).getR());
+	        	FXRectangle fxr = (FXRectangle) factory.getRectangle();
+	        	fxr.setupMoveInBound(centerPane.getLayoutBounds());
+	            centerPane.getChildren().add(fxr.getR());
 	        }
 	    });
 		
 		toolbarPolygon.setOnMouseClicked(new EventHandler<MouseEvent>() {
 	        public void handle(MouseEvent e) {
-	            centerPane.getChildren().add(((FXRegularPolygon) factory.getRegularPolygon()).getRP());
+	        	FXRegularPolygon fxrp = (FXRegularPolygon) factory.getRegularPolygon();
+	        	fxrp.setupMoveInBound(centerPane.getLayoutBounds());
+	            centerPane.getChildren().add(fxrp.getRP());
 	        }
 	    });
 				
