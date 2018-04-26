@@ -25,7 +25,6 @@ public class FXRectangle extends RectangleSimple{
 		
 		r.setOnMousePressed(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent t) {
-            	System.out.println("mousePressed"); // debug
                 orgSceneX = t.getSceneX();
                 orgSceneY = t.getSceneY();
                 orgTranslateX = ((Rectangle) t.getSource()).getTranslateX();

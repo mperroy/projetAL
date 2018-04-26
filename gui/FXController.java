@@ -13,6 +13,9 @@ public class FXController extends Application implements Controller {
 	public FXController() {
 		factory = new FXFactory();
 		toolbar = new ShapeToolbar();
+		toolbar.add(new FXRectangle());
+		toolbar.add(new FXRegularPolygon());
+		
 		view = new FXView();
 	}
 	

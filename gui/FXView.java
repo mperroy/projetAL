@@ -18,10 +18,7 @@ import javafx.stage.Stage;
 import shapeFactory.FXRectangle;
 import shapeFactory.FXRegularPolygon;
 import shapeFactory.ShapeAbstractFactory;
-import shapes.RectangleSimple;
-import shapes.RegularPolygonSimple;
 import shapes.Shape;
-import shapes.ShapeSimple;
 // Test
 import javafx.scene.shape.Rectangle;
 
@@ -56,8 +53,7 @@ public class FXView implements View {
 		centerPane = new Pane();
 		drawCommandBar();
 		
-		// drawToolBar(); commenter pour le test
-		drawTrash();
+		//drawToolBar(); //commenter pour le test
 		centerPane.setStyle("-fx-border-color: black;-fx-border-width: 2;\n");
 		
 		pane.setCenter(centerPane);
@@ -90,24 +86,23 @@ public class FXView implements View {
 
 
 	    while (it.hasNext()) {
-			/**
-			 * TODO : comment traduire les shapes de l'arraylist en �l�ment de la toolbar
-			 */
-			if (it.next() instanceof FXRectangle)
-				vbox.getChildren().add(((FXRectangle) it.next()).getR());
-		}
-		/*
-		 * else vbox.getChildren().add(((FXRegularPolygon) it.next()).getRP()); }
-		 */    
+	    	Shape tmp = it.next();
+			if (tmp instanceof FXRectangle)
+				vbox.getChildren().add(((FXRectangle) tmp).getR());
+			else 
+				vbox.getChildren().add(((FXRegularPolygon) tmp).getRP());
+		}  
 	    
-//	    // Get the mini rectangle from a toolbar
-//	    toolbarRectangle = new Rectangle(100, 30, Color.WHITE);
-//	    toolbarRectangle.setStroke(Color.BLACK);
-//	    
-//	    toolbarPolygon = new Button("Regular Polygon"); 
-//	    toolbarPolygon.setPrefSize(100, 20);
-//	    
-//	    vbox.getChildren().addAll(toolbarRectangle, toolbarPolygon);
+	    // Get the mini rectangle from a toolbar
+	    toolbarRectangle = new Rectangle(100, 30, Color.WHITE);
+	    toolbarRectangle.setStroke(Color.BLACK);
+	    
+	    toolbarPolygon = new Button("Regular Polygon"); 
+	    toolbarPolygon.setPrefSize(100, 20);
+	    
+	    vbox.getChildren().addAll(toolbarRectangle, toolbarPolygon);
+	    
+	    drawTrash();
 	    
 	    pane.setLeft(vbox);
 	}
@@ -119,12 +114,16 @@ public class FXView implements View {
 	    trashIcon.setFill(Color.WHITE);
 	    trashIcon.setStroke(Color.BLACK);
 	    
-	    //trash.getChildren().add(trashIcon);
+	    trash.getChildren().add(trashIcon);
 	    trash.setAlignment(Pos.BOTTOM_CENTER); // Why doesn't it work ?
-	    centerPane.getChildren().add(trashIcon); // trash
+	    vbox.getChildren().add(trash);
 	}	
 
 	public void setupButtons(ShapeAbstractFactory factory) {
+		// replace these 2 buttons by the drag n drop from the toolbar while browsing vbox.getChildren()
+		// onmousepressed, copy the shape and drag the new shape. centerpane needs a dragover / transfermode copy 
+		// onmousepressed needs a way to cancel if it doesn't reach the right area
+		
 		toolbarRectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
 	        public void handle(MouseEvent e) {
 	            centerPane.getChildren().add(((FXRectangle) factory.getRectangle()).getR());
@@ -142,6 +141,6 @@ public class FXView implements View {
 	            centerPane.getChildren().remove(e.getSource());
 	        }
 	    });
-		// setonmouseclicked regularpolygon, save, load, undo, redo
+		// setonmouseclicked save, load, undo, redo
 	}
 }
