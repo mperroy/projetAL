@@ -22,7 +22,13 @@ public class ShapeToolbar {
 	public Iterator<ShapeInterface> getChildren() {
 		return shapeInToolbar.iterator();
 	}
-
+	
+	public int nbElement() {
+		int cpt = 0;
+		for(ShapeInterface s : shapeInToolbar)
+			cpt += 1;
+		return cpt;
+	}
 	public MementoToolbar createMemento() {
 		return new MementoToolbar(shapeInToolbar);
 	}
