@@ -348,7 +348,6 @@ public class FXView implements View {
 						&& newTranslateY + ((ShapeSimple) s).getMinY() > bounds.getMinY()
 						&& newTranslateY + ((ShapeSimple) s).getMaxY() < bounds.getMaxY()) {
 					((ShapeInterface) s).translation(new Coordinates(newTranslateX, newTranslateY));
-					((ShapeInterface) s).position(new Coordinates(t.getSceneX(), t.getSceneY()));
 				}
 				if(((Shape) t.getSource()).getParent().equals(centerPane) && newTranslateX + ((ShapeSimple) s).getMinX() < bounds.getMinX()) {
 					centerPane.getChildren().remove((Shape) t.getSource());
