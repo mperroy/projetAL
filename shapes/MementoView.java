@@ -8,15 +8,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MementoToolbar implements Memento{
+public class MementoView implements Memento{
 	private ArrayList<ShapeInterface> state;
-	private String fileName = "toolbarSave.txt";
+	private static String fileName = "viewSave.txt";
 
-	public MementoToolbar() {
+	public MementoView() {
 		state = new ArrayList<ShapeInterface>();
 	}
 	
-	public MementoToolbar(ArrayList<ShapeInterface> state) {
+	public MementoView(ArrayList<ShapeInterface> state) {
 		setState(state);
 	}
 

@@ -16,17 +16,24 @@ import javafx.stage.Stage;
 
 public class FXController extends Application implements Controller {
 	private ShapeAbstractFactory factory;
-	private static ShapeToolbar toolbar; // test
-	private static View view; // test
+	private static ShapeToolbar toolbar;
+	private static View view;
+	private MementoToolbar m;
 
 	public FXController() {
 		factory = new FXFactory();
+		m = new MementoToolbar();
+		
 		toolbar = new ShapeToolbar();
-		toolbar.add(new FXRectangle(new Coordinates(0, 0), 50, 25));
-		toolbar.add(new FXRegularPolygon());
-
-		MementoToolbar m = toolbar.createMemento();
 		chargeToolbar(m);
+		
+		if(!toolbar.getChildren().hasNext()) {
+			toolbar.add(new FXRectangle(new Coordinates(0, 0), 50, 25));
+			toolbar.add(new FXRegularPolygon());
+
+			m = toolbar.createMemento();
+		}
+		
 		view = new FXView();
 	}
 
@@ -40,11 +47,18 @@ public class FXController extends Application implements Controller {
 		view.setupButtons(factory);
 	}
 	
-	// Test ajout toolbar
 	public static void addToToolbar(ShapeInterface s) {
-		if(toolbar!=null) {
+		if(toolbar != null) {
 			toolbar.add(s);
 			view.drawToolBar(toolbar);
+			toolbar.createMemento();
+		}
+	}
+	
+	public static void removeFromToolbar(ShapeInterface s) {
+		if(toolbar != null) {
+			toolbar.remove(s);
+			toolbar.createMemento();
 		}
 	}
 	

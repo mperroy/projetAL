@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -28,6 +29,9 @@ import shapeFactory.FXRegularPolygon;
 import shapeFactory.FXShape;
 import shapeFactory.ShapeAbstractFactory;
 import shapes.Coordinates;
+import shapes.MementoView;
+import shapes.RectangleSimple;
+import shapes.RegularPolygonSimple;
 import shapes.ShapeGroup;
 import shapes.ShapeInterface;
 import shapes.ShapeSimple;
@@ -50,6 +54,9 @@ public class FXView implements View {
 
 	public static Button buttonSave;
 	public static Button buttonLoad;
+	
+	private static ArrayList<ShapeInterface> list = new ArrayList<ShapeInterface>();
+	private static MementoView m = new MementoView();
 
 	ArrayList<Node> selectionModel = new ArrayList<Node>();
 
@@ -100,7 +107,9 @@ public class FXView implements View {
 
 		Iterator<ShapeInterface> it = toolbar.getChildren();
 		while (it.hasNext()) {
-			vbox.getChildren().add(((FXShape) it.next()).getShape());
+			FXShape tmp = (FXShape) it.next();
+			setupRightClickForToolbar(tmp);
+			vbox.getChildren().add(tmp.getShape());
 		}
 		
 		pane.setLeft(vbox);
@@ -108,23 +117,56 @@ public class FXView implements View {
 
 	public void setupButtons(ShapeAbstractFactory factory) {
 		for(Node n :vbox.getChildren()) {
-			n.setOnMousePressed(new EventHandler<MouseEvent>() {
-				public void handle(MouseEvent e) { 
-					if (n instanceof Rectangle) { 
-						FXRectangle fxr = (FXRectangle) factory.getRectangle(); 
+			n.setOnMouseClicked(new EventHandler<MouseEvent>() {
+				public void handle(MouseEvent e) {
+					if(e.getButton().equals(MouseButton.PRIMARY)) {
+						if (n instanceof Rectangle) { 
+							FXRectangle fxr = (FXRectangle) factory.getRectangle(); 
+							setupMoveInBound(centerPane.getLayoutBounds(), fxr);
+							setupRightClick(fxr);
+							centerPane.getChildren().add(fxr.getShape());
+							list.add(fxr);
+						}
+						if (n instanceof Polygon) { 
+							FXRegularPolygon fxrp = (FXRegularPolygon) factory .getRegularPolygon();
+							setupMoveInBound(centerPane.getLayoutBounds(), fxrp);
+							setupRightClick(fxrp);
+							centerPane.getChildren().add(fxrp.getShape());
+							list.add(fxrp);
+						}
+					}
+				}
+			});
+		}
+		
+		buttonSave.setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent event) {
+				m.setState(list);
+			}
+		});
+		
+		buttonLoad.setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent event) {
+				list = m.getState();
+				while(centerPane.getChildren().size()>0) {
+					centerPane.getChildren().remove(0);
+				}
+				for(ShapeInterface l : list) {
+					if (l instanceof RectangleSimple) { 
+						FXRectangle fxr = new FXRectangle((RectangleSimple) l); 
 						setupMoveInBound(centerPane.getLayoutBounds(), fxr);
 						setupRightClick(fxr);
 						centerPane.getChildren().add(fxr.getShape());
 					}
-					if (n instanceof Polygon) { 
-						FXRegularPolygon fxrp = (FXRegularPolygon) factory .getRegularPolygon();
+					if (l instanceof RegularPolygonSimple) { 
+						FXRegularPolygon fxrp = new FXRegularPolygon((RegularPolygonSimple) l);
 						setupMoveInBound(centerPane.getLayoutBounds(), fxrp);
 						setupRightClick(fxrp);
 						centerPane.getChildren().add(fxrp.getShape());
 					}
 				}
-			});
-		}
+			}
+		});
 	}
 
 	public void setupRightClick(FXShape shape) {
@@ -145,14 +187,13 @@ public class FXView implements View {
 		MenuItem suppr = new MenuItem("Delete");
 		suppr.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				if(shape.getShape().getParent().equals(centerPane))
+				if(shape.getShape().getParent().equals(centerPane)) {
 					centerPane.getChildren().remove(shape.getShape());
-				else if(shape.getShape().getParent().equals(vbox))
-					vbox.getChildren().remove(shape.getShape());
+					list.remove((ShapeInterface) shape);
+				}
 			}
 		});
 		
-		// Now to move it ?
 		MenuItem group = new MenuItem("Group");
 		group.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -164,6 +205,26 @@ public class FXView implements View {
 		});
 
 		contextMenu.getItems().addAll(edition, suppr, group);
+
+		shape.getShape().setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+			public void handle(ContextMenuEvent event) {
+				contextMenu.show(shape.getShape(), event.getScreenX(), event.getScreenY());
+			}
+		});
+	}
+	
+	public void setupRightClickForToolbar(FXShape shape) {
+		ContextMenu contextMenu = new ContextMenu();
+		
+		MenuItem suppr = new MenuItem("Delete");
+		suppr.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				vbox.getChildren().remove(shape.getShape());
+				FXController.removeFromToolbar((ShapeInterface) shape);
+			}
+		});
+
+		contextMenu.getItems().addAll(suppr);
 
 		shape.getShape().setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
 			public void handle(ContextMenuEvent event) {
@@ -194,7 +255,6 @@ public class FXView implements View {
 		grid.add(text3, 2, 3);
 		grid.add(button1, 1, 4);
 		grid.add(button2, 2, 4);
-		grid.add(new Label(fxr.getPosition().toString()), 1, 5);
 
 		button1.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
@@ -292,14 +352,12 @@ public class FXView implements View {
 				}
 				if(((Shape) t.getSource()).getParent().equals(centerPane) && newTranslateX + ((ShapeSimple) s).getMinX() < bounds.getMinX()) {
 					centerPane.getChildren().remove((Shape) t.getSource());
+					list.remove((ShapeInterface) s);
 					
 					ShapeInterface newToolbarShape = ((ShapeInterface) s).clone();
 					
 					FXController.addToToolbar(newToolbarShape);
 				}
-//				if(((Shape) t.getSource()).getParent().equals(vbox) && newTranslateX + ((ShapeSimple) s).getMinX() > bounds.getMinX()) {
-//					centerPane.getChildren().add(((FXShape)((ShapeInterface) s).clone()).getShape());
-//				}
 			}
 		});
 	}

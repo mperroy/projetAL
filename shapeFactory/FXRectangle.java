@@ -42,8 +42,6 @@ public class FXRectangle extends RectangleSimple implements FXShape {
 		r.setTranslateX(newPosition.getX());
 		r.setTranslateY(newPosition.getY());
 	}
-	
-	// Do the parameters from ShapeSimple
 
 	public Shape getShape() {
 		return r;
