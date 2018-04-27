@@ -37,7 +37,13 @@ public class ShapeGroup implements Cloneable, ShapeInterface {
 	public Iterator<ShapeInterface> getChildren() {
 		return shapeMember.iterator();
 	}
-
+	
+	public int nbElement() {
+		int cpt = 0;
+		for(ShapeInterface s : shapeMember)
+			cpt += 1;
+		return cpt;
+	}
 	@Override
 	public void translation(Coordinates newPosition) {
 		for (ShapeInterface s : shapeMember)
