@@ -16,6 +16,12 @@ public class RegularPolygonSimple extends ShapeSimple {
 		this.edgeLength = edgeLength;
 		this.edgeNumber = edgeNumber;
 	}
+	
+	public RegularPolygonSimple(RegularPolygonSimple poly) {
+		super(poly);
+		this.edgeLength = poly.getEdgeLength();
+		this.edgeNumber = poly.getEdgeNumber();
+	}
 
 	public double getEdgeLength() {
 		return edgeLength;
@@ -31,5 +37,12 @@ public class RegularPolygonSimple extends ShapeSimple {
 
 	public void setEdgeNumber(int edgeNumber) {
 		this.edgeNumber = edgeNumber;
+	}
+	
+	public String toString() {
+		StringBuffer str = new StringBuffer("RegularPolygon\n");
+		str.append(edgeLength + " " + edgeNumber + "\n");
+		str.append(super.toString());
+		return str.toString();
 	}
 }

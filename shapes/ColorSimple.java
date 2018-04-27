@@ -22,4 +22,10 @@ public class ColorSimple {
 		this.g = g;
 		this.b = b;
 	}
+	
+	public String toString() {
+		StringBuffer str = new StringBuffer();
+		str.append(r + " " + g + " " + b);
+		return str.toString();
+	}
 }

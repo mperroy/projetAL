@@ -29,6 +29,12 @@ public class Coordinates {
 	public void setY(double y) {
 		this.y = y;
 	}
+	
+	public String toString() {
+		StringBuffer str = new StringBuffer();
+		str.append(x + " " + y);
+		return str.toString();
+	}
 
 	public Coordinates clone() {
 		return new Coordinates(x, y);

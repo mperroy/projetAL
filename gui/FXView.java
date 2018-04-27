@@ -7,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,12 +22,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import shapeFactory.FXRectangle;
 import shapeFactory.FXRegularPolygon;
 import shapeFactory.FXShape;
 import shapeFactory.ShapeAbstractFactory;
+import shapes.Coordinates;
 import shapes.ShapeGroup;
 import shapes.ShapeInterface;
 import shapes.ShapeSimple;
@@ -51,8 +50,6 @@ public class FXView implements View {
 
 	public static Button buttonSave;
 	public static Button buttonLoad;
-
-	public static Rectangle trashIcon;
 
 	ArrayList<Node> selectionModel = new ArrayList<Node>();
 
@@ -102,29 +99,11 @@ public class FXView implements View {
 		vbox.setSpacing(5);
 
 		Iterator<ShapeInterface> it = toolbar.getChildren();
-		
 		while (it.hasNext()) {
-			FXShape tmp = (FXShape) it.next();
-			//setupMoveInBound(vbox.getLayoutBounds(), tmp);
-			vbox.getChildren().add(tmp.getShape());
+			vbox.getChildren().add(((FXShape) it.next()).getShape());
 		}
-
-		drawTrash();
 		
 		pane.setLeft(vbox);
-	}
-
-	public void drawTrash() {
-		trash = new StackPane();
-		trashIcon = new Rectangle(50, 50);
-		//trashIcon.setFill(); Fill with png trash
-		trashIcon.setFill(Color.WHITE);
-		trashIcon.setStroke(Color.BLACK);
-
-		trash.getChildren().add(trashIcon);
-		trash.setAlignment(Pos.BOTTOM_CENTER);
-
-		vbox.getChildren().add(trash);
 	}
 
 	public void setupButtons(ShapeAbstractFactory factory) {
@@ -146,12 +125,6 @@ public class FXView implements View {
 				}
 			});
 		}
-		
-		trashIcon.setOnMouseDragReleased(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent e) {
-				centerPane.getChildren().remove((Shape) e.getSource());
-			}
-		});
 	}
 
 	public void setupRightClick(FXShape shape) {
@@ -206,8 +179,10 @@ public class FXView implements View {
 
 		Label label1 = new Label("Width : ");
 		Label label2 = new Label("Height : ");
+		Label label3 = new Label("Border curve : ");
 		TextField text1 = new TextField();
 		TextField text2 = new TextField();
+		TextField text3 = new TextField();
 		Button button1 = new Button("Apply");
 		Button button2 = new Button("Close");
 
@@ -215,19 +190,25 @@ public class FXView implements View {
 		grid.add(text1, 2, 1);
 		grid.add(label2, 1, 2);
 		grid.add(text2, 2, 2);
-		grid.add(button1, 1, 3);
-		grid.add(button2, 2, 3);
-		grid.add(new Label(fxr.getShape().getParent().toString()), 1, 4);
+		grid.add(label3, 1, 3);
+		grid.add(text3, 2, 3);
+		grid.add(button1, 1, 4);
+		grid.add(button2, 2, 4);
+		grid.add(new Label(fxr.getPosition().toString()), 1, 5);
 
 		button1.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				try {
-					((Rectangle) fxr.getShape()).setWidth(Double.parseDouble(text1.getText()));
+					fxr.setWidth(Double.parseDouble(text1.getText()));
 				} catch (NumberFormatException | NullPointerException exc) {
 				}
 
 				try {
-					((Rectangle) fxr.getShape()).setHeight(Double.parseDouble(text2.getText()));
+					fxr.setHeight(Double.parseDouble(text2.getText()));
+				} catch (NumberFormatException | NullPointerException exc) {
+				}
+				try {
+					fxr.setBorderCurve(Double.parseDouble(text3.getText()));
 				} catch (NumberFormatException | NullPointerException exc) {
 				}
 			}
@@ -273,8 +254,6 @@ public class FXView implements View {
 					fxrp.setEdgeNumber(Integer.parseInt(text2.getText()));
 				} catch (NumberFormatException | NullPointerException exc) {
 				}
-
-				fxrp.drawVertices();
 			}
 		});
 
@@ -308,21 +287,19 @@ public class FXView implements View {
 						&& newTranslateX + ((ShapeSimple) s).getMaxX() < bounds.getMaxX()
 						&& newTranslateY + ((ShapeSimple) s).getMinY() > bounds.getMinY()
 						&& newTranslateY + ((ShapeSimple) s).getMaxY() < bounds.getMaxY()) {
-					((Shape) t.getSource()).setTranslateX(newTranslateX);
-					((Shape) t.getSource()).setTranslateY(newTranslateY);
+					((ShapeInterface) s).translation(new Coordinates(newTranslateX, newTranslateY));
+					((ShapeInterface) s).position(new Coordinates(t.getSceneX(), t.getSceneY()));
 				}
 				if(((Shape) t.getSource()).getParent().equals(centerPane) && newTranslateX + ((ShapeSimple) s).getMinX() < bounds.getMinX()) {
-//					vbox.getChildren().add((Shape) t.getSource());
 					centerPane.getChildren().remove((Shape) t.getSource());
-//					setupMoveInBound(vbox.getLayoutBounds(), s);
 					
 					ShapeInterface newToolbarShape = ((ShapeInterface) s).clone();
 					
 					FXController.addToToolbar(newToolbarShape);
 				}
-				if(((Shape) t.getSource()).getParent().equals(vbox) && newTranslateX + ((ShapeSimple) s).getMinX() > bounds.getMinX()) {
-					centerPane.getChildren().add(((FXShape)((ShapeInterface) s).clone()).getShape());
-				}
+//				if(((Shape) t.getSource()).getParent().equals(vbox) && newTranslateX + ((ShapeSimple) s).getMinX() > bounds.getMinX()) {
+//					centerPane.getChildren().add(((FXShape)((ShapeInterface) s).clone()).getShape());
+//				}
 			}
 		});
 	}

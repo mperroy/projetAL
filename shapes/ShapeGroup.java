@@ -43,6 +43,12 @@ public class ShapeGroup implements Cloneable, ShapeInterface {
 		for (ShapeInterface s : shapeMember)
 			s.translation(newPosition);
 	}
+	
+	@Override
+	public void position(Coordinates newPosition) {
+//		for (ShapeInterface s : shapeMember)
+//			s.position(newPosition);
+	}
 
 	@Override
 	public double getMinX() {

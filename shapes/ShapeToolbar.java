@@ -23,11 +23,11 @@ public class ShapeToolbar {
 		return shapeInToolbar.iterator();
 	}
 
-	public Memento createMemento() {
-		return new Memento(shapeInToolbar);
+	public MementoToolbar createMemento() {
+		return new MementoToolbar(shapeInToolbar);
 	}
 
-	public void setMemento(Memento m) {
+	public void setMemento(MementoToolbar m) {
 		shapeInToolbar = m.getState();
 	}
 }

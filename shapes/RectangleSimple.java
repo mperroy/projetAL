@@ -19,12 +19,18 @@ public class RectangleSimple extends ShapeSimple {
 		this.borderCurve = 0;
 
 		addVertix(getPosition().clone());
-		addVertix(new Coordinates(getPosition().getX() + width, getPosition()
-				.getY()));
-		addVertix(new Coordinates(getPosition().getX() + width, getPosition()
-				.getY() + height));
-		addVertix(new Coordinates(getPosition().getX(), getPosition().getY()
-				+ height));
+		addVertix(new Coordinates(getPosition().getX() + width, getPosition().getY()));
+		addVertix(new Coordinates(getPosition().getX() + width, getPosition().getY() + height));
+		addVertix(new Coordinates(getPosition().getX(), getPosition().getY() + height));
+	}
+	
+	public RectangleSimple(RectangleSimple rect) {
+		super(rect);
+		this.width = rect.getWidth();
+		this.height = rect.getHeight();
+		this.borderCurve = rect.getBorderCurve();
+		
+		setVertices(rect.getVertices());
 	}
 
 	public double getWidth() {
@@ -49,5 +55,12 @@ public class RectangleSimple extends ShapeSimple {
 
 	public void setBorderCurve(double borderCurve) {
 		this.borderCurve = borderCurve;
+	}
+
+	public String toString() {
+		StringBuffer str = new StringBuffer("Rectangle\n");
+		str.append(super.toString());
+		str.append(width + " " + height + " " + borderCurve + "\n");
+		return str.toString();
 	}
 }

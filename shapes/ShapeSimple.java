@@ -6,24 +6,36 @@ import java.util.Iterator;
 public abstract class ShapeSimple implements Cloneable, ShapeInterface {
 	private double rotation;
 	private ColorSimple color;
-	private Coordinates position; // position of point in top left corner
+	private Coordinates position;
 	private ArrayList<Coordinates> vertices;
 	private Coordinates rotationCenter;
+	private Coordinates translation;
 
 	public ShapeSimple() {
-		this.rotation = 0;
+		this.rotation = 0.0;
 		this.color = new ColorSimple();
 		this.position = new Coordinates();
 		this.vertices = new ArrayList<Coordinates>();
 		this.rotationCenter = new Coordinates();
+		this.translation = new Coordinates();
 	}
 
 	public ShapeSimple(Coordinates position) {
-		this.rotation = 0;
+		this.rotation = 0.0;
 		this.color = new ColorSimple();
 		this.position = position;
 		this.vertices = new ArrayList<Coordinates>();
 		this.rotationCenter = new Coordinates();
+		this.translation = new Coordinates();
+	}
+	
+	public ShapeSimple(ShapeSimple s) {
+		this.rotation = s.getRotation();
+		this.color = s.getColor();
+		this.position = s.getPosition();
+		this.vertices = s.getVertices();
+		this.rotationCenter = s.getRotationCenter();
+		this.translation = s.getTranslation();
 	}
 
 	@Override
@@ -50,6 +62,11 @@ public abstract class ShapeSimple implements Cloneable, ShapeInterface {
 
 	@Override
 	public void translation(Coordinates newPosition) {
+		setTranslation(newPosition);
+	}
+	
+	public void position(Coordinates newPosition) {
+		setPosition(newPosition);
 	}
 
 	public void addVertix(Coordinates position) {
@@ -96,6 +113,15 @@ public abstract class ShapeSimple implements Cloneable, ShapeInterface {
 	public void setPosition(Coordinates position) {
 		this.position = position;
 	}
+	
+
+	public Coordinates getTranslation() {
+		return translation;
+	}
+
+	public void setTranslation(Coordinates translation) {
+		this.translation = translation;
+	}
 
 	// util function
 
@@ -133,6 +159,22 @@ public abstract class ShapeSimple implements Cloneable, ShapeInterface {
 				res = c.getY();
 		}
 		return res;
+	}
+	
+	public String toString() {
+//		private ArrayList<Coordinates> vertices;
+		
+		StringBuffer str = new StringBuffer();
+		str.append(position.toString() + "\n");
+		str.append(rotationCenter.toString() + "\n");
+		str.append(translation.toString() + "\n");
+		str.append(color.toString() + "\n");
+		str.append(rotation + "\n");
+		for(Coordinates c : vertices) {
+			str.append(c.toString() + " ");
+		}
+		str.append("\n");
+		return str.toString();
 	}
 
 	// Composite
