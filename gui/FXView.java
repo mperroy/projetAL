@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -26,16 +27,20 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import shapeFactory.FXRectangle;
 import shapeFactory.FXRegularPolygon;
+import shapeFactory.FXShape;
 import shapeFactory.ShapeAbstractFactory;
 import shapes.ShapeGroup;
 import shapes.ShapeInterface;
+import shapes.ShapeSimple;
+import shapes.ShapeToolbar;
 import javafx.scene.shape.Polygon;
-// Test
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 public class FXView implements View {
-
+	private double orgSceneX, orgSceneY;
+	private double orgTranslateX, orgTranslateY;
+	
 	public static Scene scene;
 	public static BorderPane pane;
 	public static Pane centerPane;
@@ -47,9 +52,7 @@ public class FXView implements View {
 	public static Button buttonSave;
 	public static Button buttonLoad;
 
-	public static Button toolbarPolygon;
 	public static Rectangle trashIcon;
-	public static Rectangle toolbarRectangle;
 
 	ArrayList<Node> selectionModel = new ArrayList<Node>();
 
@@ -64,7 +67,6 @@ public class FXView implements View {
 		centerPane.setStyle("-fx-border-color: black;-fx-border-width: 1;");
 
 		pane.setCenter(centerPane);
-
 		scene = new Scene(pane, 600, 600);
 
 		stage.setScene(scene);
@@ -94,30 +96,21 @@ public class FXView implements View {
 		pane.setTop(hbox);
 	}
 
-	public void drawToolBar(Iterator<ShapeInterface> it) {
+	public void drawToolBar(ShapeToolbar toolbar) {
 		vbox = new VBox();
 		vbox.setPadding(new Insets(0, 10, 10, 10));
 		vbox.setSpacing(5);
 
+		Iterator<ShapeInterface> it = toolbar.getChildren();
+		
 		while (it.hasNext()) {
-			ShapeInterface tmp = it.next();
-			if (tmp instanceof FXRectangle)
-				vbox.getChildren().add(((FXRectangle) tmp).getShape());
-			else
-				vbox.getChildren().add(((FXRegularPolygon) tmp).getShape());
-
+			FXShape tmp = (FXShape) it.next();
+			//setupMoveInBound(vbox.getLayoutBounds(), tmp);
+			vbox.getChildren().add(tmp.getShape());
 		}
 
-		toolbarRectangle = new Rectangle(100, 30, Color.WHITE);
-		toolbarRectangle.setStroke(Color.BLACK);
-
-		toolbarPolygon = new Button("Regular Polygon");
-		toolbarPolygon.setPrefSize(100, 20);
-
-		vbox.getChildren().addAll(toolbarRectangle, toolbarPolygon);
-
 		drawTrash();
-
+		
 		pane.setLeft(vbox);
 	}
 
@@ -129,75 +122,48 @@ public class FXView implements View {
 		trashIcon.setStroke(Color.BLACK);
 
 		trash.getChildren().add(trashIcon);
-
 		trash.setAlignment(Pos.BOTTOM_CENTER);
+
 		vbox.getChildren().add(trash);
 	}
 
 	public void setupButtons(ShapeAbstractFactory factory) {
-
-		toolbarRectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent e) {
-				FXRectangle fxr = (FXRectangle) factory.getRectangle();
-				fxr.setupMoveInBound(centerPane.getLayoutBounds());
-				setupRightClick(fxr);
-				centerPane.getChildren().add(fxr.getShape());
-			}
-		});
-
-		toolbarPolygon.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent e) {
-				FXRegularPolygon fxrp = (FXRegularPolygon) factory.getRegularPolygon();
-				fxrp.setupMoveInBound(centerPane.getLayoutBounds());
-				setupRightClick(fxrp);
-				centerPane.getChildren().add(fxrp.getShape());
-			}
-		});
-		
 		for(Node n :vbox.getChildren()) {
-			n.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			n.setOnMousePressed(new EventHandler<MouseEvent>() {
 				public void handle(MouseEvent e) { 
 					if (n instanceof Rectangle) { 
 						FXRectangle fxr = (FXRectangle) factory.getRectangle(); 
-						fxr.setupMoveInBound(vbox.getLayoutBounds());
-						centerPane.getChildren().add(((FXRectangle) fxr).getShape());
+						setupMoveInBound(centerPane.getLayoutBounds(), fxr);
+						setupRightClick(fxr);
+						centerPane.getChildren().add(fxr.getShape());
 					}
 					if (n instanceof Polygon) { 
 						FXRegularPolygon fxrp = (FXRegularPolygon) factory .getRegularPolygon();
-						fxrp.setupMoveInBound(vbox.getLayoutBounds());
-						centerPane.getChildren().add(((FXRegularPolygon) fxrp).getShape());
+						setupMoveInBound(centerPane.getLayoutBounds(), fxrp);
+						setupRightClick(fxrp);
+						centerPane.getChildren().add(fxrp.getShape());
 					}
 				}
 			});
 		}
-
-//			centerPane.setOnMouseDragOver(new EventHandler<MouseEvent>() { 
-//				public void handle(MouseEvent e) { 
-//				}
-//			});
 		
 		trashIcon.setOnMouseDragReleased(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
-				centerPane.getChildren().remove(e.getSource());
+				centerPane.getChildren().remove((Shape) e.getSource());
 			}
 		});
 	}
 
-	public void setupRightClick(ShapeInterface shape) {
+	public void setupRightClick(FXShape shape) {
 		ContextMenu contextMenu = new ContextMenu();
-		Shape s;
-		if (shape instanceof FXRectangle) {
-			s = ((FXRectangle) shape).getShape();
-		} else {
-			s = ((FXRegularPolygon) shape).getShape();
-		}
-
+		
 		MenuItem edition = new MenuItem("Edit");
 		edition.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				if (shape instanceof FXRectangle) {
 					setupEditionRectangle((FXRectangle) shape);
-				} else {
+				} 
+				if (shape instanceof FXRegularPolygon){
 					setupEditionRegularPolygon((FXRegularPolygon) shape);
 				}
 			}
@@ -206,13 +172,14 @@ public class FXView implements View {
 		MenuItem suppr = new MenuItem("Delete");
 		suppr.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				if (shape instanceof FXRectangle) {
-					centerPane.getChildren().remove(((FXRectangle) shape).getShape());
-				} else {
-					centerPane.getChildren().remove(((FXRegularPolygon) shape).getShape());
-				}
+				if(shape.getShape().getParent().equals(centerPane))
+					centerPane.getChildren().remove(shape.getShape());
+				else if(shape.getShape().getParent().equals(vbox))
+					vbox.getChildren().remove(shape.getShape());
 			}
 		});
+		
+		// Now to move it ?
 		MenuItem group = new MenuItem("Group");
 		group.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -222,13 +189,12 @@ public class FXView implements View {
 				}
 			}
 		});
-		contextMenu.getItems().addAll(edition, group);
 
 		contextMenu.getItems().addAll(edition, suppr, group);
 
-		s.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+		shape.getShape().setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
 			public void handle(ContextMenuEvent event) {
-				contextMenu.show(s, event.getScreenX(), event.getScreenY());
+				contextMenu.show(shape.getShape(), event.getScreenX(), event.getScreenY());
 			}
 		});
 	}
@@ -251,6 +217,7 @@ public class FXView implements View {
 		grid.add(text2, 2, 2);
 		grid.add(button1, 1, 3);
 		grid.add(button2, 2, 3);
+		grid.add(new Label(fxr.getShape().getParent().toString()), 1, 4);
 
 		button1.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
@@ -319,5 +286,44 @@ public class FXView implements View {
 
 		dialog.setScene(sceneDialog);
 		dialog.show();
+	}
+	
+	public void setupMoveInBound(Bounds bounds, FXShape s) {
+		s.getShape().setOnMousePressed(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent t) {
+				orgSceneX = t.getSceneX();
+				orgSceneY = t.getSceneY();
+				orgTranslateX = ((Shape) t.getSource()).getTranslateX();
+				orgTranslateY = ((Shape) t.getSource()).getTranslateY();
+			}
+		});
+
+		s.getShape().setOnMouseDragged(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent t) {
+				double offsetX = t.getSceneX() - orgSceneX;
+				double offsetY = t.getSceneY() - orgSceneY;
+				double newTranslateX = orgTranslateX + offsetX;
+				double newTranslateY = orgTranslateY + offsetY;
+				if (newTranslateX + ((ShapeSimple) s).getMinX() > bounds.getMinX() 
+						&& newTranslateX + ((ShapeSimple) s).getMaxX() < bounds.getMaxX()
+						&& newTranslateY + ((ShapeSimple) s).getMinY() > bounds.getMinY()
+						&& newTranslateY + ((ShapeSimple) s).getMaxY() < bounds.getMaxY()) {
+					((Shape) t.getSource()).setTranslateX(newTranslateX);
+					((Shape) t.getSource()).setTranslateY(newTranslateY);
+				}
+				if(((Shape) t.getSource()).getParent().equals(centerPane) && newTranslateX + ((ShapeSimple) s).getMinX() < bounds.getMinX()) {
+//					vbox.getChildren().add((Shape) t.getSource());
+					centerPane.getChildren().remove((Shape) t.getSource());
+//					setupMoveInBound(vbox.getLayoutBounds(), s);
+					
+					ShapeInterface newToolbarShape = ((ShapeInterface) s).clone();
+					
+					FXController.addToToolbar(newToolbarShape);
+				}
+				if(((Shape) t.getSource()).getParent().equals(vbox) && newTranslateX + ((ShapeSimple) s).getMinX() > bounds.getMinX()) {
+					centerPane.getChildren().add(((FXShape)((ShapeInterface) s).clone()).getShape());
+				}
+			}
+		});
 	}
 }

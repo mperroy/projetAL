@@ -9,7 +9,6 @@ public class ShapeToolbar {
 
 	public ShapeToolbar() {
 		shapeInToolbar = new ArrayList <ShapeInterface> ();
-		shapeInToolbar = new ArrayList<ShapeInterface>();
 	}
 
 	public void add(ShapeInterface s) {

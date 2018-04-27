@@ -1,20 +1,14 @@
 package shapeFactory;
 
 import java.util.ArrayList;
-import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import shapes.Coordinates;
 import shapes.RegularPolygonSimple;
 
-public class FXRegularPolygon extends RegularPolygonSimple {
+public class FXRegularPolygon extends RegularPolygonSimple implements FXShape {
 	private Polygon rP; // Regular polygon
-
-	private static double orgSceneX, orgSceneY;
-	private static double orgTranslateX, orgTranslateY;
 
 	public FXRegularPolygon() {
 		super(new Coordinates(200, 200), 50, 5);
@@ -25,35 +19,7 @@ public class FXRegularPolygon extends RegularPolygonSimple {
 		rP.setFill(Color.WHITE);
 		rP.setStroke(Color.BLACK);
 	}
-
-	public void setupMoveInBound(Bounds bounds) {
-		rP.setOnMousePressed(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent t) {
-				orgSceneX = t.getSceneX();
-				orgSceneY = t.getSceneY();
-				orgTranslateX = ((Polygon) t.getSource()).getTranslateX();
-				orgTranslateY = ((Polygon) t.getSource()).getTranslateY();
-			}
-		});
-
-		rP.setOnMouseDragged(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent t) {
-				double offsetX = t.getSceneX() - orgSceneX;
-				double offsetY = t.getSceneY() - orgSceneY;
-				double newTranslateX = orgTranslateX + offsetX;
-				double newTranslateY = orgTranslateY + offsetY;
-
-				if (newTranslateX + getMinX() > bounds.getMinX()
-						&& newTranslateX + getMaxX() < bounds.getMaxX()
-						&& newTranslateY + getMinY() > bounds.getMinY()
-						&& newTranslateY + getMaxY() < bounds.getMaxY()) {
-					((Polygon) t.getSource()).setTranslateX(newTranslateX);
-					((Polygon) t.getSource()).setTranslateY(newTranslateY);
-				}
-			}
-		});
-	}
-
+	
 	public Shape getShape() {
 		return rP;
 	}

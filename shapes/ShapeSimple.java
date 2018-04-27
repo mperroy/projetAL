@@ -3,7 +3,7 @@ package shapes;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public abstract class ShapeSimple implements ShapeInterface {
+public abstract class ShapeSimple implements Cloneable, ShapeInterface {
 	private double rotation;
 	private ColorSimple color;
 	private Coordinates position; // position of point in top left corner
@@ -135,7 +135,7 @@ public abstract class ShapeSimple implements ShapeInterface {
 		return res;
 	}
 
-	// function for shapeGroup
+	// Composite
 	public void addShape(ShapeInterface s) throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
@@ -157,5 +157,15 @@ public abstract class ShapeSimple implements ShapeInterface {
 			}
 
 		};
+	}
+	
+	// Prototype
+	public ShapeInterface clone() {
+		try {
+			return (ShapeSimple) super.clone();
+		}catch(CloneNotSupportedException e) {
+			System.out.print("This is not the clone you are looking for");
+			return null;
+		}
 	}
 }
